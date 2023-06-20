@@ -1,6 +1,12 @@
 # Next.js Example with MongoDB
 
-**Deploy.**
+- [**How to Integrate Vercel & MongoDB Step-by-Step* :YouTube*](https://www.youtube.com/watch?v=JIlYroSsInU)
+- <https://www.mongodb.com/docs/atlas/api/data-api/#when-to-use-the-data-api>
+- <https://www.mongodb.com/docs/atlas/reference/partner-integrations/vercel/#std-label-vercel-access-lists>
+
+## Setup
+
+### Deploy
 
 ```bash
 mkdir exc-nextjs-2023-with-mongodb-example
@@ -8,9 +14,35 @@ cd exc-nextjs-2023-with-mongodb-example
 npx create-next-app@latest --example with-mongodb .
 ```
 
-**References.**
+### MongoDB Atlas connect to Vercel
 
-* https://www.youtube.com/watch?v=JIlYroSsInU
+Watch the video linked above for more details...
+
+### Vercel CLI
+
+```bash
+npm -i vercel
+```
+
+Deploy to Vercel
+
+```bash
+npx vercel # --help
+```
+
+Pull the (already created) environment variables locally.
+
+```bash
+npx vercel env pull
+```
+
+This will generate [`.env.local`](./.env.local.example) file.
+
+### Test the connection locally by running the app
+
+```bash
+npm run dev
+```
 
 ## Example app using MongoDB
 
