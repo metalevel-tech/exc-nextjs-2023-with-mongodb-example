@@ -38,6 +38,72 @@ npx vercel env pull
 
 This will generate [`.env.local`](./.env.local.example) file.
 
+## Atlas CLI
+
+- <https://www.mongodb.com/docs/atlas/atlas-cli/>
+- <https://www.mongodb.com/docs/atlas/cli/stable/install-atlas-cli/>
+
+### Setup **MongoDB Community Edition** `apt` repository on Ubuntu
+
+```bash
+wget -qO - https://pgp.mongodb.com/server-6.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+sudo apt update
+```
+
+At this poin (20.06.2023) we need to convert the MongoDB's repository GPG key to to mitigate the `apt` warning message...
+
+```bash
+APP="MongoDB"
+LIST="/etc/apt/sources.list.d/mongodb-org-6.0.list"
+KEY=$(sudo apt-key list 2>/dev/null | grep -i "$APP" -B1 | head -n1 | awk '{print $(NF-1)$NF}')
+
+sudo apt-key export "$KEY" | sudo gpg --dearmour -o "/usr/share/keyrings/${APP}.gpg"
+sudo sed -i.bak "s#]# signed-by=/usr/share/keyrings/${APP}.gpg]#" "$LIST"
+sudo apt update
+sudo apt-key del "$KEY" 
+sudo rm "${LIST}.bak"
+```
+
+```bash
+sudo apt update
+```
+
+### Install the Atlas CLI and `mongosh` (optional)
+
+Invoke the following apt command to install both the Atlas CLI and mongosh:
+
+```bash
+sudo apt install mongodb-atlas
+```
+
+If you don't want to install `mongosh`, invoke the following apt command instead to install the Atlas CLI only:
+
+```bash
+sudo apt install mongodb-atlas-cli
+```
+
+### Configure the Atlas CLI
+
+```bash
+atlas setup
+```
+
+Follow the steps in the setup wizard to configure the Atlas CLI and the Browser. And finally connect to your Atlas project.
+
+Alternatively you can use the `atlas auth login` as it is described in the [video tutorial [at 8:02]](https://youtu.be/JIlYroSsInU?t=482):
+
+```bash
+atlas auth login
+atlas clusters loadSampleData Cluster0
+```
+
+- You can load sample data via the Web UI as well.
+
+- Assuming `Cluster0` is the cluster you want to load sample data into.
+
+- Note: Command `loadSampleData` is deprecated, use `atlas clusters sampleData load` instead.
+
 ### Test the connection locally by running the app
 
 ```bash
@@ -115,13 +181,13 @@ When you are successfully connected, you can refer to the [MongoDB Node.js Drive
 
 You can deploy this app to the cloud with [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
 
-#### Deploy Your Local Project
+### Deploy Your Local Project
 
 To deploy your local project to Vercel, push it to GitHub/GitLab/Bitbucket and [import to Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example).
 
 **Important**: When you import your project on Vercel, make sure to click on **Environment Variables** and set them to match your `.env.local` file.
 
-#### Deploy from Our Template
+### Deploy from Our Template
 
 Alternatively, you can deploy using our template by clicking on the Deploy button below.
 
