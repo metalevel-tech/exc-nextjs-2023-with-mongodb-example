@@ -1,8 +1,17 @@
 # Next.js Example with MongoDB
 
-- [**How to Integrate Vercel & MongoDB Step-by-Step* :YouTube*](https://www.youtube.com/watch?v=JIlYroSsInU)
+- [**How to Integrate Vercel & MongoDB Step-by-Step** :YouTube](https://www.youtube.com/watch?v=JIlYroSsInU)
+- [**Getting Started with MongoDB Atlas - A Modern Database!** :YouTube](https://youtu.be/bBA9rUdqmgY)
 - <https://www.mongodb.com/docs/atlas/api/data-api/#when-to-use-the-data-api>
 - <https://www.mongodb.com/docs/atlas/reference/partner-integrations/vercel/#std-label-vercel-access-lists>
+
+## Result
+
+Start the development server, visit hte following URLs in the browser and watch the servers console output.
+
+- <http://localhost:3000/api/wrong>
+- <http://localhost:3000/api/right>
+- <http://localhost:3000/api/right-with-module>
 
 ## Setup
 
