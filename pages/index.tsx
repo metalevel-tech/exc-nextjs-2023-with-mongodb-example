@@ -3,50 +3,62 @@ import Head from "next/head";
 import clientPromise from "../lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 
+interface CompanyNames {
+  id: string;
+  name: string;
+}
+
 type ConnectionStatus = {
   isConnected: boolean;
+  companiesNames: CompanyNames[] | null;
 };
+
+/**
+ * In this example we are fetching data on the server side
+ * and passing it to the client side via getServerSideProps();
+ *
+ * This we even do not need tu use useEffect(); and useState();
+ * hooks to fetch data on the client side.
+ *
+ * Also we are minimizing the amount of
+ * the API calls on the client side...
+ */
+const dbName = "sample_training";
+const collectionName = "companies";
 
 export const getServerSideProps: GetServerSideProps<
   ConnectionStatus
 > = async () => {
   try {
-    await clientPromise;
-    // `await clientPromise` will use the default database passed in the MONGODB_URI
-    // However you can use another database (e.g. myDatabase) by replacing the `await clientPromise` with the following code:
-    //
-    // `const client = await clientPromise`
-    // `const db = client.db("myDatabase")`
-    //
-    // Then you can execute queries against your database like so:
-    // db.find({}) or any of the MongoDB Node Driver commands
+    const mongoClient = await clientPromise;
+    const database = mongoClient.db(dbName);
+    const collection = database.collection(collectionName);
+    const companiesNames = await collection
+      .find({})
+      .project({ name: 1 })
+      .limit(5)
+      .toArray();
 
     return {
-      props: { isConnected: true },
+      props: {
+        isConnected: true,
+        companiesNames: JSON.parse(
+          JSON.stringify(companiesNames)
+        ) as CompanyNames[],
+      },
     };
   } catch (e) {
     console.error(e);
     return {
-      props: { isConnected: false },
+      props: { isConnected: false, companiesNames: null },
     };
   }
 };
 
 export default function Home({
   isConnected,
+  companiesNames,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [companiesNames, setCompaniesNames] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
-
-  useEffect(() => {
-    (async () => {
-      const results = await fetch("/api/right-with-module");
-      const resultsNames = await results.json();
-      setCompaniesNames(resultsNames);
-    })();
-  }, []);
-
   return (
     <div className="container">
       <Head>
@@ -72,30 +84,36 @@ export default function Home({
           Get started by editing <code>pages/index.js</code>
         </p>
 
-        <div
-          style={{
-            margin: "2em 4em 0",
-            padding: "1em",
-            border: "1px solid lightgray",
-            borderRadius: "2em",
-            backgroundColor: "#fdfbf6",
-          }}
-        >
-          <div className="grid" style={{ marginTop: "1em" }}>
-            {companiesNames.map((company, index) => (
-              <div className="card" key={index}>
-                <h3 style={{ margin: 0 }}>{company.name}</h3>
-              </div>
-            ))}
-          </div>
+        {companiesNames ? (
+          <div
+            style={{
+              margin: "2em 4em 0",
+              padding: "1em",
+              border: "1px solid lightgray",
+              borderRadius: "2em",
+              backgroundColor: "#fdfbf6",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              maxWidth: "800px",
+            }}
+          >
+            <div className="grid" style={{ marginTop: "1em" }}>
+              {companiesNames.map((company, index) => (
+                <div className="card" key={index}>
+                  <h3 style={{ margin: 0 }}>{company.name}</h3>
+                </div>
+              ))}
+            </div>
 
-          <p className="description">
-            Just refresh this window a couple of times and watch how much times{" "}
-            <code>lib/mongodb.ts</code> will output its message to the dev
-            server's console. <br />
-            <b>1 of course :)</b>
-          </p>
-        </div>
+            <p className="description">
+              Just refresh this window a couple of times and watch how much
+              times <code>lib/mongodb.ts</code> will output its message to the
+              dev server's console. <br />
+              <b>1 of course :)</b>
+            </p>
+          </div>
+        ) : null}
 
         <div className="grid">
           <a href="https://nextjs.org/docs" className="card">
