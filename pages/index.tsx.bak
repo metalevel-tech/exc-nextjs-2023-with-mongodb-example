@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Head from "next/head";
 import clientPromise from "../lib/mongodb";
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
@@ -35,18 +35,6 @@ export const getServerSideProps: GetServerSideProps<
 export default function Home({
   isConnected,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [companiesNames, setCompaniesNames] = useState<
-    Array<{ id: string; name: string }>
-  >([]);
-
-  useEffect(() => {
-    (async () => {
-      const results = await fetch("/api/right-with-module");
-      const resultsNames = await results.json();
-      setCompaniesNames(resultsNames);
-    })();
-  }, []);
-
   return (
     <div className="container">
       <Head>
@@ -71,31 +59,6 @@ export default function Home({
         <p className="description">
           Get started by editing <code>pages/index.js</code>
         </p>
-
-        <div
-          style={{
-            margin: "2em 4em 0",
-            padding: "1em",
-            border: "1px solid lightgray",
-            borderRadius: "2em",
-            backgroundColor: "#fdfbf6",
-          }}
-        >
-          <div className="grid" style={{ marginTop: "1em" }}>
-            {companiesNames.map((company, index) => (
-              <div className="card" key={index}>
-                <h3 style={{ margin: 0 }}>{company.name}</h3>
-              </div>
-            ))}
-          </div>
-
-          <p className="description">
-            Just refresh this window a couple of times and watch how much times{" "}
-            <code>lib/mongodb.ts</code> will output its message to the dev
-            server's console. <br />
-            <b>1 of course :)</b>
-          </p>
-        </div>
 
         <div className="grid">
           <a href="https://nextjs.org/docs" className="card">

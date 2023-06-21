@@ -38,7 +38,7 @@ export default async function handler(
       .limit(5)
       .toArray();
 
-    res.status(200).json({ HTTP_METHOD: req.method, RESULTS: results });
+    res.status(200).json(results);
   } catch (error) {
     console.log("error", error);
   }
