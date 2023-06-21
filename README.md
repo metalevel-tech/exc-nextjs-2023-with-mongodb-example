@@ -47,7 +47,7 @@ npx vercel env pull
 
 This will generate [`.env.local`](./.env.local.example) file.
 
-## Atlas CLI
+## Atlas CLI (MongoDB CLI)
 
 - <https://www.mongodb.com/docs/atlas/atlas-cli/>
 - <https://www.mongodb.com/docs/atlas/cli/stable/install-atlas-cli/>
@@ -117,6 +117,16 @@ atlas clusters loadSampleData Cluster0
 
 ```bash
 npm run dev
+```
+
+## Compass (MongoDB GUI)
+
+- <https://www.mongodb.com/docs/compass/master/install/>
+
+```bash
+cd ~/Downloads
+wget https://downloads.mongodb.com/compass/mongodb-compass_1.37.0_amd64.deb
+sudo apt install ./mongodb-compass_1.37.0_amd64.deb
 ```
 
 ## Example app using MongoDB
